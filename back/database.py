@@ -4,6 +4,7 @@ Conexión a la base de datos de usuarios
 
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
+    async_sessionmaker,
     AsyncSession,
     AsyncEngine,
     AsyncAttrs,
@@ -36,17 +37,26 @@ async def setup_database(engine: AsyncEngine):
         await conn.run_sync(Base.metadata.create_all)
 
 
-async def get_async_session(engine: AsyncEngine):
-    session = AsyncSession(engine)
-    session.begin()
-    try:
-        yield session
-    except Exception:
-        session.rollback()
-        raise
-    finally:
-        await session.close()
+# async def get_async_session(engine: AsyncEngine):
+#     session = AsyncSession(engine)
+#     session.begin()
+#     try:
+#         yield session
+#     except Exception:
+#         session.rollback()
+#         raise
+#     finally:
+#         await session.close()
 
+# engine = engine_to_database()
+        
+engine = create_async_engine(
+            f"mysql+aiomysql://{user}:{pwd}@{host}/{db}", echo=True
+        )
+
+# MySessionAsync = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+MySessionAsync = AsyncSession(engine)
 
 async def drop_all_tables(engine: AsyncEngine):
     async with engine.begin() as conn:
