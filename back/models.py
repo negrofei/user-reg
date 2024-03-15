@@ -3,7 +3,6 @@ Modelos SQLAlchemy
 """
 
 from database import Base
-from database import engine_to_database, setup_database, drop_all_tables
 
 import sqlalchemy as _sql
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -16,8 +15,8 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
-import asyncio
-
+import logging
+logger = logging.getLogger('models')
 
 class UserDB(Base):
     __tablename__ = "users"
@@ -25,7 +24,7 @@ class UserDB(Base):
     email: Mapped[str] = mapped_column(_sql.String(100), index=True, unique=True)
     hashed_pass: Mapped[str] = mapped_column(_sql.String(100))
     personal_info: Mapped[list["UserPersonalDataDB"]] = relationship(
-        back_populates="user", cascade="all, delete-orphan"
+        back_populates="owner", cascade="all, delete-orphan", lazy="joined",
     )
     created_time: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
@@ -41,9 +40,9 @@ class UserPersonalDataDB(Base):
     __tablename__ = "user_personal_data"
     # id: Mapped[int] = mapped_column(primary_key=True)
     id_user: Mapped[int] = mapped_column(
-        _sql.ForeignKey(f"{UserDB.__tablename__}.id_user"), primary_key=True
+        _sql.ForeignKey(f"users.id_user"), primary_key=True
     )
-    user: Mapped["UserDB"] = relationship(back_populates="personal_info")
+    owner: Mapped["UserDB"] = relationship(back_populates="personal_info")
     # ponele
     nombre: Mapped[str] = mapped_column(_sql.String(100))
     apellido: Mapped[str] = mapped_column(_sql.String(100))
@@ -83,6 +82,7 @@ class SueloUserDB(Base):
 class TipoCultivoDB(Base):
     @classmethod
     async def __initialize__(cls, engine):
+        logger = logging.getLogger(f"{__name__}.{__class__.__name__}")
         path = Path(__file__).parent
         tabla_inicial = pd.read_csv(
             path.joinpath("../tablas_iniciales/tipo_cultivo_fdc.csv")
@@ -109,7 +109,7 @@ class TipoCultivoDB(Base):
                 )
                 await session.flush()
                 await session.commit()
-                print("Todo fue insertado correctamente en 'tipos_cultivo'")
+                logger.info("Todo fue insertado correctamente en 'tipos_cultivo'")
             except Exception as e:
                 await session.rollback()
                 raise e
@@ -125,6 +125,7 @@ class TipoCultivoDB(Base):
 
 class PatronKcDB(Base):
     async def __initialize__(engine):
+        logger = logging.getLogger(f"{__name__}.{__class__.__name__}")
         path = Path(__file__).parent
         tabla_inicial = pd.read_csv(path.joinpath("../tablas_iniciales/patronkc.csv"))
         tabla_inicial.replace(np.nan, None, inplace=True)
@@ -141,7 +142,7 @@ class PatronKcDB(Base):
                 )
                 await session.flush()
                 await session.commit()
-                print("Todo fue insertado correctamente en 'patron_kc' ")
+                logger.info("Todo fue insertado correctamente en 'patron_kc' ")
             except Exception as e:
                 await session.rollback()
                 raise e

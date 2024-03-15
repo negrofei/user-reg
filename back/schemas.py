@@ -2,7 +2,7 @@
 Modelos Pydantic
 """
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
 class UserBase(BaseModel):
@@ -12,15 +12,28 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+class UserPersonalDataBase(BaseModel):
+    pass
 
-class UserPersonalData(BaseModel):
+class UserPersonalDataCreate(UserPersonalDataBase):
     nombre: str
     apellido: str
     direccion: str
     telefono: str
 
 
+class UserPersonalData(UserPersonalDataCreate):
+    model_config = ConfigDict(
+        from_attributes=True
+    )
+
+
+
 class User(UserBase):
     id_user: int
-    # hashed_pass: str
     personal_data: list[UserPersonalData] = []
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )
+

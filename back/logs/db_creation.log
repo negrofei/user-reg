@@ -1,0 +1,135 @@
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,156 - INFO - SELECT DATABASE()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,156 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,157 - INFO - SELECT @@sql_mode
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,157 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,157 - INFO - SELECT @@lower_case_table_names
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,158 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,158 - INFO - BEGIN (implicit)
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,159 - INFO - SHOW TABLES
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,159 - INFO - [generated in 0.00013s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,160 - INFO - SET FOREIGN_KEY_CHECKS = 0
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,160 - INFO - [generated in 0.00015s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,161 - INFO - SET FOREIGN_KEY_CHECKS = 1
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,161 - INFO - [generated in 0.00014s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,161 - INFO - COMMIT
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,162 - INFO - BEGIN (implicit)
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,162 - INFO - DESCRIBE `user_reg_test`.`users`
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,162 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,163 - INFO - DESCRIBE `user_reg_test`.`user_personal_data`
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,163 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,163 - INFO - DESCRIBE `user_reg_test`.`estacion_usuario`
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,163 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,164 - INFO - DESCRIBE `user_reg_test`.`suelo_usuario`
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,164 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,164 - INFO - DESCRIBE `user_reg_test`.`tipos_cultivo`
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,165 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,165 - INFO - DESCRIBE `user_reg_test`.`patron_kc`
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,165 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,166 - INFO - DESCRIBE `user_reg_test`.`datos_balance_usuario`
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,166 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,167 - INFO - 
+CREATE TABLE users (
+	id_user INTEGER NOT NULL AUTO_INCREMENT, 
+	email VARCHAR(100) NOT NULL, 
+	hashed_pass VARCHAR(100) NOT NULL, 
+	created_time DATETIME NOT NULL, 
+	PRIMARY KEY (id_user)
+)
+
+
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,167 - INFO - [no key 0.00018s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,187 - INFO - CREATE UNIQUE INDEX ix_users_email ON users (email)
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,187 - INFO - [no key 0.00023s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,197 - INFO - CREATE INDEX ix_users_id_user ON users (id_user)
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,197 - INFO - [no key 0.00028s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,209 - INFO - 
+CREATE TABLE tipos_cultivo (
+	id_tipo_cultivo INTEGER NOT NULL AUTO_INCREMENT, 
+	codigo VARCHAR(10) NOT NULL, 
+	nombre VARCHAR(100) NOT NULL, 
+	PRIMARY KEY (id_tipo_cultivo), 
+	UNIQUE (codigo)
+)
+
+
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,209 - INFO - [no key 0.00032s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,223 - INFO - 
+CREATE TABLE patron_kc (
+	id_patron INTEGER NOT NULL AUTO_INCREMENT, 
+	codigo VARCHAR(20) NOT NULL, 
+	PRIMARY KEY (id_patron), 
+	UNIQUE (codigo)
+)
+
+
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,223 - INFO - [no key 0.00032s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,236 - INFO - 
+CREATE TABLE user_personal_data (
+	id_user INTEGER NOT NULL, 
+	nombre VARCHAR(100) NOT NULL, 
+	apellido VARCHAR(100) NOT NULL, 
+	direccion VARCHAR(100), 
+	telefono VARCHAR(100), 
+	PRIMARY KEY (id_user), 
+	FOREIGN KEY(id_user) REFERENCES users (id_user)
+)
+
+
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,237 - INFO - [no key 0.00061s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,253 - INFO - 
+CREATE TABLE estacion_usuario (
+	id_estacion INTEGER NOT NULL AUTO_INCREMENT, 
+	id_user INTEGER NOT NULL, 
+	nombre VARCHAR(100) NOT NULL, 
+	lat NUMERIC(9, 7) NOT NULL, 
+	lon NUMERIC(9, 6) NOT NULL, 
+	PRIMARY KEY (id_estacion), 
+	FOREIGN KEY(id_user) REFERENCES users (id_user)
+)
+
+
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,254 - INFO - [no key 0.00041s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,268 - INFO - CREATE INDEX ix_estacion_usuario_id_estacion ON estacion_usuario (id_estacion)
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,268 - INFO - [no key 0.00030s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,281 - INFO - 
+CREATE TABLE suelo_usuario (
+	id_suelo INTEGER NOT NULL AUTO_INCREMENT, 
+	id_estacion INTEGER NOT NULL, 
+	tipo_suelo VARCHAR(100) NOT NULL, 
+	capacidad_campo NUMERIC(7, 4), 
+	pmp NUMERIC(7, 4), 
+	coef_escurrimiento NUMERIC(2, 1), 
+	coef_percolacion NUMERIC(9, 8), 
+	PRIMARY KEY (id_suelo), 
+	FOREIGN KEY(id_estacion) REFERENCES estacion_usuario (id_estacion)
+)
+
+
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,281 - INFO - [no key 0.00034s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,297 - INFO - 
+CREATE TABLE datos_balance_usuario (
+	id_balance INTEGER NOT NULL AUTO_INCREMENT, 
+	id_estacion INTEGER NOT NULL, 
+	id_suelo INTEGER NOT NULL, 
+	id_tipo_cultivo INTEGER NOT NULL, 
+	id_patron INTEGER NOT NULL, 
+	PRIMARY KEY (id_balance), 
+	FOREIGN KEY(id_estacion) REFERENCES estacion_usuario (id_estacion), 
+	FOREIGN KEY(id_suelo) REFERENCES suelo_usuario (id_suelo), 
+	FOREIGN KEY(id_tipo_cultivo) REFERENCES tipos_cultivo (id_tipo_cultivo), 
+	FOREIGN KEY(id_patron) REFERENCES patron_kc (id_patron)
+)
+
+
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,297 - INFO - [no key 0.00031s] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,321 - INFO - COMMIT
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,327 - INFO - BEGIN (implicit)
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,334 - INFO - INSERT INTO tipos_cultivo (codigo, nombre) VALUES (%s, %s)
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,334 - INFO - [generated in 0.00028s] [('S1-III', 'Soja de Primera (Grupo de Madurez III)'), ('S1-IV', 'Soja de Primera (Grupo de Madurez IV)'), ('TS(TL)', 'Trigo (Siembra Temprana)'), ('TS(TC)', 'Trigo (Siembra Tardía)'), ('M1.2', 'Maíz (Siembra Temprana)'), ('M1.1', 'Maíz (Siembra Temprana)'), ('G1.1', 'Girasol (Siembra Temprana)'), ('G1.2', 'Girasol (Siembra Tardía)')  ... displaying 10 of 21 total bound parameter sets ...  ('M2.2', 'Maíz (Siembra Tardía)'), ('TS(S2)VI', 'Soja de Segunda (Grupo de Madurez VI)')]
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,336 - INFO - COMMIT
+(models.TipoCultivoDB) - 2024-03-15 15:26:09,338 - INFO - Todo fue insertado correctamente en 'tipos_cultivo'
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,341 - INFO - BEGIN (implicit)
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,341 - INFO - INSERT INTO patron_kc (codigo) VALUES (%s)
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,342 - INFO - [generated in 0.00019s] [('25MY',), ('9JUL',), ('BALC',), ('MJUA',), ('PERG',), ('ROSA',), ('TLAU',), ('UNICO',)  ... displaying 10 of 23 total bound parameter sets ...  ('NEA',), ('STGO',)]
+(sqlalchemy.engine.Engine) - 2024-03-15 15:26:09,343 - INFO - COMMIT
+(models.PatronKcDB) - 2024-03-15 15:26:09,345 - INFO - Todo fue insertado correctamente en 'patron_kc' 
