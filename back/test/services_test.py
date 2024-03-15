@@ -35,7 +35,6 @@ async def create_user(
     hashed_password = hash_password(user.password)
     logger.info('Creando usuario')
     db_user = UserModel(
-        # id_user=str(uuid4()),
         name=user.name, 
         hashed_pass=hashed_password,
         fullname=user.fullname,
@@ -64,6 +63,19 @@ async def get_user_by_id(
         raise e
     return result.scalars().first()                                    
     
+
+async def get_address_by_id(
+        id: int, 
+        async_session: AsyncSession,
+):
+    stmt = select(AddressModel).where(AddressModel.user_id == id)
+    async_session.begin()
+    try:
+        result = await async_session.execute(stmt)
+    except Exception as e:
+        await async_session.rollback()
+        raise e
+    return result.scalars().first()
 
 async def create_user_address(
         user_id: int,

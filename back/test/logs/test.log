@@ -1,0 +1,64 @@
+(main) - 2024-03-15 16:28:30,436 - INFO - Getting user ...
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,442 - INFO - SELECT DATABASE()
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,442 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,443 - INFO - SELECT @@sql_mode
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,443 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,443 - INFO - SELECT @@lower_case_table_names
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,443 - INFO - [raw sql] ()
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,444 - INFO - BEGIN (implicit)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,451 - INFO - SELECT user.id, user.name, user.hashed_pass, user.fullname, user.nickname, user.create_date 
+FROM user 
+WHERE user.id = %s
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,451 - INFO - [generated in 0.00058s] (5,)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,454 - INFO - SELECT address.user_id AS address_user_id, address.id AS address_id, address.email_address AS address_email_address 
+FROM address 
+WHERE address.user_id IN (%s)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,454 - INFO - [generated in 0.00027s] (5,)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:30,456 - INFO - ROLLBACK
+(main) - 2024-03-15 16:28:46,298 - INFO - Getting user ...
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:46,299 - INFO - BEGIN (implicit)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:46,300 - INFO - SELECT user.id, user.name, user.hashed_pass, user.fullname, user.nickname, user.create_date 
+FROM user 
+WHERE user.id = %s
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:46,300 - INFO - [cached since 15.85s ago] (5,)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:46,302 - INFO - SELECT address.user_id AS address_user_id, address.id AS address_id, address.email_address AS address_email_address 
+FROM address 
+WHERE address.user_id IN (%s)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:46,303 - INFO - [cached since 15.85s ago] (5,)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:46,305 - INFO - SELECT address.id, address.user_id, address.email_address 
+FROM address 
+WHERE address.user_id = %s
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:46,305 - INFO - [generated in 0.00036s] (5,)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:28:46,307 - INFO - ROLLBACK
+(main) - 2024-03-15 16:29:02,725 - INFO - Creando email address usuario 5
+(services) - 2024-03-15 16:29:02,725 - INFO - Obtengo usuario
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,726 - INFO - BEGIN (implicit)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,726 - INFO - SELECT user.id, user.name, user.hashed_pass, user.fullname, user.nickname, user.create_date 
+FROM user 
+WHERE user.id = %s
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,727 - INFO - [cached since 32.28s ago] (5,)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,729 - INFO - SELECT address.user_id AS address_user_id, address.id AS address_id, address.email_address AS address_email_address 
+FROM address 
+WHERE address.user_id IN (%s)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,729 - INFO - [cached since 32.28s ago] (5,)
+(services) - 2024-03-15 16:29:02,731 - INFO - Creando la dirección
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,734 - INFO - INSERT INTO address (user_id, email_address) VALUES (%s, %s)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,734 - INFO - [generated in 0.00040s] (5, 'alternate@mail.com')
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,736 - INFO - COMMIT
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,746 - INFO - BEGIN (implicit)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,749 - INFO - SELECT address.id, address.user_id, address.email_address 
+FROM address 
+WHERE address.id = %s
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,749 - INFO - [generated in 0.00033s] (2,)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:02,750 - INFO - ROLLBACK
+(main) - 2024-03-15 16:29:07,082 - INFO - Getting user ...
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:07,083 - INFO - BEGIN (implicit)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:07,084 - INFO - SELECT user.id, user.name, user.hashed_pass, user.fullname, user.nickname, user.create_date 
+FROM user 
+WHERE user.id = %s
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:07,084 - INFO - [cached since 36.63s ago] (5,)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:07,086 - INFO - SELECT address.user_id AS address_user_id, address.id AS address_id, address.email_address AS address_email_address 
+FROM address 
+WHERE address.user_id IN (%s)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:07,086 - INFO - [cached since 36.63s ago] (5,)
+(sqlalchemy.engine.Engine) - 2024-03-15 16:29:07,087 - INFO - ROLLBACK

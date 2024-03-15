@@ -16,6 +16,7 @@ from database_test import engine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
 this_dir = Path(__file__).parent
+this_dir.joinpath('logs').mkdir(exist_ok=True)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -38,7 +39,6 @@ app = FastAPI(
 async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
 
 
-# Endpoint para crear un usuario (only email required)
 @app.post("/users/", response_model=schemas_test.UserResponse)
 async def create_user(
     user: schemas_test.UserCreate
@@ -60,7 +60,7 @@ async def get_user(
     user = await services_test.get_user_by_id(id=id, async_session=session)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    session.close()
+    await session.close()
     return user
 
 @app.post("/users/address", response_model=schemas_test.AddressResponse)
@@ -76,4 +76,21 @@ async def create_user_address(
         address=address, 
         async_session=session
     )
+    await session.close()
     return created_address
+
+
+@app.get("/users/address", response_model=schemas_test.AddressResponse)
+async def get_user_address(
+    id: int | None,
+):
+    """Gets user"""
+    logger.info("Getting user ...")
+    session = async_session()
+    user = await services_test.get_user_by_id(id=id, async_session=session)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    else:
+        address = await services_test.get_address_by_id(id=id, async_session=session)
+    await session.close()
+    return address 
