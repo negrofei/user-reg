@@ -1,9 +1,9 @@
-from database import engine_to_database, drop_all_tables, setup_database, MySessionAsync
+from database import engine_to_database, drop_all_tables, setup_database
 from models import UserDB, UserPersonalDataDB, TipoCultivoDB, PatronKcDB
 
 import schemas
 from passlib import hash
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 import asyncio
 
@@ -23,16 +23,17 @@ async def initialize_db(from_scratch=True):
     await engine.dispose()
 
 
-async def get_async_session():
-    session = MySessionAsync
-    session.begin()
-    try:
-        yield session
-    except Exception:
-        await session.rollback()
-        raise
-    finally:
-        await session.close()
+## Maybe for later
+# async def get_async_session():
+#     session = MySessionAsync
+#     session.begin()
+#     try:
+#         yield session
+#     except Exception:
+#         await session.rollback()
+#         raise
+#     finally:
+#         await session.close()
 
 
 def hash_password(password):
