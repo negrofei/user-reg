@@ -18,18 +18,6 @@ class Base(AsyncAttrs, DeclarativeBase):
     pass
 
 
-async def engine_to_database() -> AsyncEngine:
-    """
-    Armamos el objeto engine que se comunica con la base de datos
-    """
-    try:
-        engine = create_async_engine(
-            f"mysql+aiomysql://{user}:{pwd}@{host}/{db}", echo=True
-        )
-        return engine
-    except Exception as e:
-        raise
-
 
 async def setup_database(engine: AsyncEngine):
     async with engine.begin() as conn:

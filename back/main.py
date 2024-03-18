@@ -2,8 +2,8 @@
 Main
 """
 
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+from fastapi import FastAPI, HTTPException
+from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from schemas import UserCreate, UserBase, User, UserPersonalData, UserPersonalDataCreate
 import services
