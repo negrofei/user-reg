@@ -35,12 +35,11 @@ async def setup_database(engine: AsyncEngine):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-        
-engine = create_async_engine(
-            f"mysql+aiomysql://{user}:{pwd}@{host}/{db}", echo=True
-        )
+
+engine = create_async_engine(f"mysql+aiomysql://{user}:{pwd}@{host}/{db}", echo=True)
 
 MySessionAsync = AsyncSession(engine)
+
 
 async def drop_all_tables(engine: AsyncEngine):
     async with engine.begin() as conn:
