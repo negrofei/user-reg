@@ -58,7 +58,7 @@ async def get_user(
     async_session: AsyncSession,
     user_id: int | None = None,
     email: str | None = None,
-):
+) -> UserDB | None:
     """Gets a user by either their email or id."""
     logger.info(f"Getting user {user_id} {email}")
     await async_session.begin()
@@ -94,9 +94,7 @@ async def get_users(
 
 
 async def create_user_personal_data(
-    user_id: int,
-    personal_data: schemas.UserPersonalData,
-    async_session: AsyncSession
+    user_id: int, personal_data: schemas.UserPersonalData, async_session: AsyncSession
 ):
     """Creates a user personal data."""
     logger.info(f"Creando personal data para usuario {user_id}")
@@ -121,13 +119,11 @@ async def create_user_personal_data(
 async def get_personal_data_by_user_id(
     user_id: int,
     async_session: AsyncSession,
-):
+) -> UserPersonalDataDB | None:
     """Gets a personal data by user id."""
     async_session.begin()
     try:
-        stmt = select(UserPersonalDataDB).where(
-            UserPersonalDataDB.id_user == user_id
-        )
+        stmt = select(UserPersonalDataDB).where(UserPersonalDataDB.id_user == user_id)
         result = await async_session.execute(stmt)
     except Exception as e:
         async_session.rollback()
@@ -138,16 +134,19 @@ async def get_personal_data_by_user_id(
 if __name__ == "__main__":
     import asyncio
     from pathlib import Path
+
     this_dir = Path(__file__).parent
 
     logging.basicConfig(
-    level=logging.INFO,
-    handlers=[
-        logging.FileHandler(Path(this_dir.joinpath('./logs/db_creation.log')), mode='w'),
-        logging.StreamHandler()
-    ],
-    format='(%(name)s) - %(asctime)s - %(levelname)s - %(message)s',
-)
+        level=logging.INFO,
+        handlers=[
+            logging.FileHandler(
+                Path(this_dir.joinpath("./logs/db_creation.log")), mode="w"
+            ),
+            logging.StreamHandler(),
+        ],
+        format="(%(name)s) - %(asctime)s - %(levelname)s - %(message)s",
+    )
     logger = logging.getLogger(__name__)
 
     asyncio.run(initialize_db(from_scratch=True))

@@ -25,7 +25,9 @@ class UserModel(Base):
     nickname: Mapped[Optional[str]] = mapped_column(String(64))
     create_date: Mapped[datetime] = mapped_column(insert_default=func.now())
 
-    addresses: Mapped[list["AddressModel"]] = relationship(back_populates="user", lazy='selectin')
+    addresses: Mapped[list["AddressModel"]] = relationship(
+        back_populates="user", lazy="selectin"
+    )
 
 
 class AddressModel(Base):

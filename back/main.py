@@ -5,7 +5,7 @@ Main
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from schemas import UserCreate, UserBase, User, UserPersonalData
+from schemas import UserCreate, UserBase, User, UserPersonalData, UserPersonalDataCreate
 import services
 from database import engine
 
@@ -19,12 +19,12 @@ this_dir = Path(__file__).parent
 logging.basicConfig(
     level=logging.INFO,
     handlers=[
-        logging.FileHandler(Path(this_dir.joinpath('./logs/test.log')), mode='w'),
-        logging.StreamHandler()
+        logging.FileHandler(Path(this_dir.joinpath("./logs/test.log")), mode="w"),
+        logging.StreamHandler(),
     ],
-    format='(%(name)s) - %(asctime)s - %(levelname)s - %(message)s',
+    format="(%(name)s) - %(asctime)s - %(levelname)s - %(message)s",
 )
-logger = logging.getLogger('main')
+logger = logging.getLogger(__name__)
 
 # Armo la session
 async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
@@ -39,10 +39,10 @@ app = FastAPI(
 # Endpoint para crear un usuario (only email required)
 @app.post("/users/", response_model=UserBase)
 async def create_user(
-    user: UserCreate, 
+    user: UserCreate,
 ):
     """Creates a new user with the given email and password"""
-    logger.info(f'Creando usuario {user.email}')
+    logger.info(f"Creando usuario {user.email}")
     session = async_session()
     db_user = await services.get_user(async_session=session, email=user.email)
     if db_user:
@@ -60,11 +60,14 @@ async def get_user(
     session = async_session()
     if not (email or user_id):
         raise HTTPException(status_code=404, detail="You must provide user id or email")
-    db_user = await services.get_user(async_session=session, user_id=user_id, email=email)
+    db_user = await services.get_user(
+        async_session=session, user_id=user_id, email=email
+    )
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     await session.close()
     return db_user
+
 
 @app.get("/users/all", response_model=list[User])
 async def get_users():
@@ -74,13 +77,13 @@ async def get_users():
     return db_users
 
 
-@app.post("/users/{user_id}/personal_data/", response_model=UserPersonalData)
+@app.post("/users/{user_id}/personal_data/", response_model=UserPersonalDataCreate)
 async def create_personal_data(
     user_id: int,
-    personal_data: UserPersonalData,
+    personal_data: UserPersonalDataCreate,
 ):
     """Creates a user personal data by ID"""
-    logger.info(f'Creando personal data para usuario {user_id}')
+    logger.info(f"Creando personal data para usuario {user_id}")
     session = async_session()
     db_user = await services.get_user(async_session=session, user_id=user_id)
     if not db_user:
@@ -100,6 +103,10 @@ async def get_personal_data(
     """Gets a user personal data by ID"""
     logger.info(f"Getting {user_id} personal data")
     session = async_session()
-    db_personal_user = await services.get_personal_data_by_user_id(async_session=session, user_id=user_id)
+    db_personal_user = await services.get_personal_data_by_user_id(
+        async_session=session, user_id=user_id
+    )
+    if not db_personal_user:
+        raise HTTPException(status_code=404, detail="User not found")
     await session.close()
     return db_personal_user

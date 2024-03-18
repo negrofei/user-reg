@@ -12,8 +12,10 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+
 class UserPersonalDataBase(BaseModel):
     pass
+
 
 class UserPersonalDataCreate(UserPersonalDataBase):
     nombre: str
@@ -23,17 +25,11 @@ class UserPersonalDataCreate(UserPersonalDataBase):
 
 
 class UserPersonalData(UserPersonalDataCreate):
-    model_config = ConfigDict(
-        from_attributes=True
-    )
-
+    model_config = ConfigDict(from_attributes=True)
 
 
 class User(UserBase):
     id_user: int
-    personal_data: list[UserPersonalData] = []
+    personal_info: list[UserPersonalData] = []
 
-    model_config = ConfigDict(
-        from_attributes=True
-    )
-
+    model_config = ConfigDict(from_attributes=True)

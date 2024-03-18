@@ -16,7 +16,9 @@ import numpy as np
 from datetime import datetime
 
 import logging
-logger = logging.getLogger('models')
+
+logger = logging.getLogger(__name__)
+
 
 class UserDB(Base):
     __tablename__ = "users"
@@ -24,16 +26,18 @@ class UserDB(Base):
     email: Mapped[str] = mapped_column(_sql.String(100), index=True, unique=True)
     hashed_pass: Mapped[str] = mapped_column(_sql.String(100))
     personal_info: Mapped[list["UserPersonalDataDB"]] = relationship(
-        back_populates="owner", cascade="all, delete-orphan", lazy="joined",
+        back_populates="owner",
+        cascade="all, delete-orphan",
+        lazy="selectin",
     )
-    created_time: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    created_time: Mapped[datetime] = mapped_column(insert_default=datetime.now())
 
     # Function to verify password
     def verify_password(self, password: str) -> bool:
         return hash.bcrypt.verify(password, self.hashed_pass)
 
     def __repr__(self) -> str:
-        return f"<User(id {self.id_user!r}, email {self.email!r})"
+        return f"<User(id {self.id_user!r}, email {self.email!r})>"
 
 
 class UserPersonalDataDB(Base):
@@ -48,8 +52,9 @@ class UserPersonalDataDB(Base):
     apellido: Mapped[str] = mapped_column(_sql.String(100))
     direccion: Mapped[Optional[str]] = mapped_column(_sql.String(100))
     telefono: Mapped[Optional[str]] = mapped_column(_sql.String(100))
+
     def __repr__(self) -> str:
-        return f"<UserPersonalData(id {self.id_user!r}, nombre {self.nombre!r}), apellido {self.apellido!r}>"
+        return f"<UserPersonalData(id {self.id_user!r}, nombre {self.nombre!r}, apellido {self.apellido!r})>"
 
 
 class EstacionUserDB(Base):
@@ -170,4 +175,3 @@ class BalanceUserDB(Base):
     id_patron: Mapped[int] = mapped_column(
         _sql.ForeignKey(f"{PatronKcDB.__tablename__}.id_patron")
     )
-
